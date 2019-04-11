@@ -4,9 +4,13 @@ class GraphService
   end
 
   def save
-    graph = Graph.new(@params)
-    graph.save
-
+    if @params[:id]
+      graph = Graph.find @params[:id]
+      graph.update @params
+    else
+      graph = Graph.new @params
+      graph.save
+    end
     graph
   end
 end
