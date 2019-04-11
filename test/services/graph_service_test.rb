@@ -10,13 +10,11 @@ class GraphServiceTest < ActiveSupport::TestCase
   end
 
   test "saves Graphs Nodes" do
-    id = SecureRandom.uuid
     params = {
-      id: SecureRandom.uuid,
       name: 'Graph 1',
       nodes_attributes: [
-        { id: SecureRandom.uuid, name: 'Node 1', graph_id: id },
-      # { id: SecureRandom.uuid, name: 'Node 2' },
+        { name: 'Node 1' },
+        { name: 'Node 2' }
       ]
     }
     assert_difference 'Node.count', 2 do
