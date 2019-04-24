@@ -44,6 +44,28 @@ class GraphServiceTest < ActiveSupport::TestCase
     assert_equal graph.nodes.second.name, 'Node 2'
   end
 
+  test "does it also delete" do
+    params = {
+      name: 'Graph 1',
+      nodes_attributes: [
+        { name: 'Node 1' },
+        { name: 'Node 2' }
+      ]
+    }
+    graph = GraphService.new(params).save
+    second_node = Node.find_by(name: 'Node 2')
+    new_params = {
+      id: graph.id,
+      name: graph.name,
+      nodes_attributes: [
+        { id: second_node.id, name: 'Node 2' }
+      ]
+    }
+    graph = GraphService.new(new_params).save
+
+    assert_equal 1, graph.nodes.count
+  end
+
   test "knows how to update graphs nodes and those edges" do
     params = {
       name: 'Graph 1',

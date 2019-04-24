@@ -7,6 +7,7 @@ class GraphService
 
   def save
     save_graph_and_nodes
+    delete_nodes
     save_edges
 
     self.graph
@@ -23,10 +24,23 @@ class GraphService
     end
   end
 
+  def delete_nodes
+    return unless graph_params[:id]
+    Node.delete(persisted_node_ids - new_node_ids)
+  end
+
   def save_edges
     edges_params.each do |edge|
       Edge.create edge
     end
+  end
+
+  def persisted_node_ids
+    Graph.find(graph_params[:id]).nodes.map(&:id)
+  end
+
+  def new_node_ids
+    params[:nodes_attributes].select { |node| !!node[:id] }.map { |node| node[:id] }
   end
 
   def graph_params
