@@ -1,0 +1,2 @@
+class JsonGraph < ApplicationRecord
+end
