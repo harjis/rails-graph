@@ -1,28 +1,30 @@
 class GraphsController < ApplicationController
   def index
     @graphs = Graph.all
-    pp @graphs
+    render json: @graphs
   end
 
   def show
     @graph = Graph.find(params[:id])
+    render json: @graph
   end
 
   def create
     @graph = Graph.create(graph_params)
 
-    render 'graphs/show'
+    render json: @graph
   end
 
   def update
     @graph = Graph.find(params[:id])
     @graph.update(graph_params)
 
-    render 'graphs/show'
+    render json: @graph
   end
 
   def destroy
     Graph.destroy(params[:id])
+    render json: true
   end
 
   private
