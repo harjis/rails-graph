@@ -13,29 +13,31 @@
 ActiveRecord::Schema.define(version: 2019_04_11_113011) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pgcrypto"
   enable_extension "plpgsql"
-  enable_extension "uuid-ossp"
 
-  create_table "edges", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "edges", force: :cascade do |t|
     t.string "name"
-    t.uuid "from_node_id"
-    t.uuid "to_node_id"
+    t.bigint "from_node_id"
+    t.bigint "to_node_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_node_id"], name: "index_edges_on_from_node_id"
+    t.index ["to_node_id"], name: "index_edges_on_to_node_id"
+  end
+
+  create_table "graphs", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "graphs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "nodes", force: :cascade do |t|
     t.string "name"
+    t.bigint "graph_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["graph_id"], name: "index_nodes_on_graph_id"
   end
 
-  create_table "nodes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "name"
-    t.uuid "graph_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
+  add_foreign_key "nodes", "graphs"
 end
