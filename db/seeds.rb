@@ -17,3 +17,14 @@ edge = Edge.new(from_node: node, to_node: node2)
 edge.save
 edge2 = Edge.new(from_node: node, to_node: node3)
 edge2.save
+
+graph = Graph.new(name: 'Graph 2')
+node21 = Node.new(name: 'Node 21')
+node22 = Node.new(name: 'Node 22')
+graph.nodes = [node21, node22]
+graph.save
+
+edge = Edge.new(from_node: node21, to_node: node22)
+edge.save
+edge2 = Edge.new(from_node: node21, to_node: node)
+edge2.save
