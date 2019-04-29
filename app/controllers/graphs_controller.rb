@@ -27,6 +27,10 @@ class GraphsController < ApplicationController
     render json: true
   end
 
+  def undo
+    render json: Graph.find(params[:id]).undo
+  end
+
   private
 
   def graph_params
