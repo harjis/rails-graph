@@ -24,19 +24,12 @@ class GraphTest < ActiveSupport::TestCase
     edge.to_node = node3
     edge.save
 
-
-    graph.all_audits_desc.first.auditable_type.constantize.without_auditing do
-      graph.all_audits_desc.first.undo
-      graph.all_audits_desc.first.destroy
-    end
+    graph.undo
     graph.reload
     edge.reload
     assert_equal node2.id, edge.to_node.id
 
-    graph.all_audits_desc.first.auditable_type.constantize.without_auditing do
-      graph.all_audits_desc.first.undo
-      graph.all_audits_desc.first.destroy
-    end
+    graph.undo
 
     graph.reload
     assert_equal 0, graph.uniq_edges.count
