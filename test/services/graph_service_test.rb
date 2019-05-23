@@ -104,4 +104,31 @@ class GraphServiceTest < ActiveSupport::TestCase
     assert_equal Edge.first.from_node, Node.first
     assert_equal Edge.first.to_node, Node.second
   end
+
+  test "does not allow duplicate edges" do
+    params = {
+      name: 'Graph 1',
+      nodes_attributes: [
+        { name: 'Node 1' },
+        { name: 'Node 2' }
+      ]
+    }
+    graph = GraphService.new(params).save
+    new_params = {
+      id: graph.id,
+      name: graph.name,
+      nodes_attributes: [
+        { id: graph.nodes.first.id, name: 'New Node 1' },
+        { id: graph.nodes.second.id, name: 'Node 2' }
+      ],
+      edges: [
+        { from_node_id: graph.nodes.first.id, to_node_id: graph.nodes.second.id },
+        { from_node_id: graph.nodes.first.id, to_node_id: graph.nodes.second.id }
+      ]
+    }
+
+    assert_raise(ActiveRecord::RecordNotUnique) {
+      GraphService.new(new_params).save
+    }
+  end
 end

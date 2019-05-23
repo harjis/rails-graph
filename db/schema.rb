@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_14_095100) do
+ActiveRecord::Schema.define(version: 2019_05_23_112235) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_095100) do
     t.bigint "to_node_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["from_node_id", "to_node_id"], name: "index_edges_on_from_node_id_and_to_node_id", unique: true
     t.index ["from_node_id"], name: "index_edges_on_from_node_id"
     t.index ["to_node_id"], name: "index_edges_on_to_node_id"
   end
