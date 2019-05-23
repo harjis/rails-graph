@@ -9,6 +9,7 @@ class GraphService
     save_graph_and_nodes
     delete_nodes
     save_edges
+    delete_edges
 
     self.graph
   end
@@ -26,12 +27,22 @@ class GraphService
 
   def delete_nodes
     return unless graph_params[:id]
-    Node.delete(persisted_node_ids - new_node_ids)
+    to_be_deleted = persisted_node_ids - new_node_ids
+    Node.delete(to_be_deleted) unless to_be_deleted.size == 0
   end
 
   def save_edges
     edges_params.each do |edge|
       Edge.create edge
+    end
+  end
+
+  def delete_edges
+    self.graph.uniq_edges.each do |edge|
+      in_params = edges_params.find do |edge_param|
+        edge_param[:from_node_id] == edge.from_node.id && edge_param[:to_node_id] == edge.to_node.id
+      end
+      edge.destroy unless in_params
     end
   end
 

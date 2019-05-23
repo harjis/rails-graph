@@ -131,4 +131,38 @@ class GraphServiceTest < ActiveSupport::TestCase
       GraphService.new(new_params).save
     }
   end
+
+  test "deletes edges" do
+    params = {
+      name: 'Graph 1',
+      nodes_attributes: [
+        { name: 'Node 1' },
+        { name: 'Node 2' }
+      ]
+    }
+    graph = GraphService.new(params).save
+    new_params = {
+      id: graph.id,
+      name: graph.name,
+      nodes_attributes: [
+        { id: graph.nodes.first.id, name: 'New Node 1' },
+        { id: graph.nodes.second.id, name: 'Node 2' }
+      ],
+      edges: [
+        { from_node_id: graph.nodes.first.id, to_node_id: graph.nodes.second.id }
+      ]
+    }
+    GraphService.new(new_params).save
+    delete_params = {
+      id: graph.id,
+      name: graph.name,
+      nodes_attributes: [
+        { id: graph.nodes.first.id, name: 'New Node 1' },
+        { id: graph.nodes.second.id, name: 'Node 2' }
+      ],
+      edges: []
+    }
+    GraphService.new(delete_params).save
+    assert_equal 0, Edge.count
+  end
 end
